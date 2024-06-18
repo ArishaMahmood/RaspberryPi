@@ -1,7 +1,5 @@
 # /api1/app.py
 from flask import Flask, jsonify, request
-import random
-
 import RPi.GPIO as GPIO
 import time
 
@@ -10,19 +8,14 @@ app = Flask(__name__)
 TRIG = 16
 ECHO = 18
 
-@app.route('/random_number', methods=['GET'])
+@app.route('/ultrasonic_dis', methods=['GET'])
 def get_user():
     setup()
     try:
-        num_to_print = loop()
+        distance = loop()
     except KeyboardInterrupt:
         destroy()
-    random_number = random.randint(1, 200)
-    return jsonify(num_to_print)
-
-
-
-
+    return jsonify(distance)
 
 
 def setup():
@@ -32,10 +25,10 @@ def setup():
 
 def distance():
     GPIO.output(TRIG, 0)
-    time.sleep(0.000002)
+    time.sleep(0.2)
 
     GPIO.output(TRIG, 1)
-    time.sleep(0.00001)
+    time.sleep(0.1)
     GPIO.output(TRIG, 0)
 
     while GPIO.input(ECHO) == 0:
@@ -52,7 +45,7 @@ def loop():
     while True:
         dis = distance()
         print ('Distance: %.2f' % dis )
-        time.sleep(0.3)
+        time.sleep(0.1)
         return int(dis)
 
 def destroy():
