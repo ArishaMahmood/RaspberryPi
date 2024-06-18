@@ -40,16 +40,13 @@ def index():
 @app.route('/circle', methods=['GET'])
 def get_circle():
     try:
-        random_number_resp = requests.get(f'http://localhost:5001/random_number')
-        if random_number_resp.status_code != 200:
-            return jsonify({"error": "Order not found"}), 404
-        random_number = random_number_resp.json()
-
-        # random_number = random.randint(1, 200)
-        print(random_number)
+        ultrasonic_dis_resp = requests.get(f'http://localhost:5001/ultrasonic_dis')
+        if ultrasonic_dis_resp.status_code != 200:
+            return jsonify({"error": "ultrasonic distances"}), 404
+        ultrasonic_distances = ultrasonic_dis_resp.json()
         
         # Get the radius from the query parameters
-        radius = int(request.args.get('radius', random_number))
+        radius = int(request.args.get('radius', ultrasonic_distances))
 
         # Determine the color of the circle
         color = get_color(radius)
